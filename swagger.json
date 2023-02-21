@@ -1,0 +1,576 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "API for Reservations",
+        "title": "Reservations API",
+        "name": "Reservations API"
+    },
+    "schemes" : ["http"],
+    "host": "localhost:5001",
+    "basePath": "/api",
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "authorization",
+            "in": "header",
+            "description": "Bearer token"
+        }
+    },
+    "paths": {
+        "/users/register": {
+            "post": {
+                "summary": "registers a new user",
+                "produces":"application/json",
+                "consumes":"application/json",
+                "parameters":[{
+                    "in": "body",
+                    "name": "body",
+                    "description": "New User payload",
+                    "schema": {
+                        "type": "object",
+                        "$ref": "#/definitions/RegisterUserPayload"
+                    }
+                }],
+                "responses":{
+                    "201": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/RegisterUserResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/users/login": {
+            "post": {
+                "summary": "logs in the given user",
+                "produces":"application/json",
+                "consumes":"application/json",
+                "parameters":[
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "User credentials",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/UserLoginPayload"
+                        }                 
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/UserLoginResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reservations": {
+            "get": {
+                "summary": "gets the list of all reservations",
+                "produces": "application/json",
+                "security": [{"Bearer": []}],    
+                "parameters": [],  
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/ReservationsResponse"
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "summary": "creates a new reservation",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "consumes": "application/json",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "new reservation payload",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/ReservationPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "type": "object",
+                        "$ref": "#/definitions/ReservationsResponse"
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/reservations/{:id}": {
+            "get": {
+                "summary": "get the reservation by id",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "parameters": [
+                   {
+                    "in": "path",
+                    "name": ":id",
+                    "required": true,
+                    "description": "reservation id that needs to be fetched",
+                    "type": "string"
+                   }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/ReservationsResponse"      
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "summary": "update the reservation by id",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "consumes": "application/json",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": ":id",
+                        "required": true,
+                        "description": "reservation id that needs to be fetched",
+                        "type": "string"
+                    },
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "reservation payload for update",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/ReservationPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/ReservationsResponse"      
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "summary": "cancels the reservation with given id",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "parameters":[{
+                    "in": "path",
+                    "name": ":id",
+                    "description": "reservation id that needs to be cancelled"
+                }],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema":{
+                            "type":"object",
+                            "$ref": "#/definitions/ReservationsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/stays/summary/{:guestMemberId}": {
+            "get":{
+                "summary": "retrieves the summary of guest stay",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": ":guestMemberId",
+                        "required": true,
+                        "description": "Member Id of the guest to retrieve the stay summary",
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/StaySummaryResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }     
+            }
+        },
+        "/stays/summary/search": {
+            "post": {
+                "summary": "search the stays between given span",
+                "security": [{"Bearer": []}],
+                "produces": "application/json",
+                "consumes": "application/json",
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "description": "payload for search",
+                        "schema": {
+                            "type": "object",
+                            "$ref": "#/definitions/SearchPayload"  
+                        }          
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "success",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/ReservationsResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "failure",
+                        "schema": {
+                            "type": "object",
+                            "$ref":"#/definitions/InvalidResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "RegisterUserPayload": {
+            "type": "object",
+            "properties": {
+                "username": {"type": "string"},
+                "email": {"type": "string"},
+                "password": {"type": "string"}
+            }
+        },
+        "RegisterUserResponse": {
+            "type": "object",
+            "properties": {
+                "username": {"type": "string"},
+                "email": {"type": "string"}      
+            }
+        },
+        "UserLoginPayload": {
+            "type": "object",
+            "properties": {
+                "username": {"type": "string"},
+                "email": {"type": "string"},
+                "password": {"type": "string"}        
+            }
+        },
+        "UserLoginResponse": {
+            "type": "object",
+            "properties": {
+                "message": {"type": "string"},
+                "accessToken": {"type": "string"}
+            }
+        },
+        "ReservationsResponse": {
+            "type": "object",
+            "properties": {
+                "reservationId": { "type": "string" },
+                "guestMemberId": { "type": "string" },
+                "guestName": { "type": "string" },
+                "hotelName": { "type": "string" },
+                "arrivalDate": { "type": "string", "format": "date" },
+                "departureDate": { "type": "string", "format": "date" },
+                "status": { "type": "string" },
+                "baseStayAmount": { "type": "number" },
+                "taxAmount": { "type": "number" }
+            }
+        },   
+        "ReservationPayload": {
+            "type": "object",
+            "properties": {
+                "guestMemberId": { "type": "string" },
+                "guestName": { "type": "string" },
+                "hotelName": { "type": "string" },
+                "arrivalDate": { "type": "string", "format": "date" },
+                "departureDate": { "type": "string", "format": "date" },
+                "status": { "type": "string" },
+                "baseStayAmount": { "type": "number" },
+                "taxAmount": { "type": "number" }
+            }     
+        },
+        "StaySummaryResponse": {
+            "type": "object",
+            "properties": {
+                "guestMemberId": { "type": "string" },
+                "upComingStayInfo": {"type": "object", "$ref": "#/definitions/StayInfo"},
+                "pastStayInfo": {"type": "object", "$ref": "#/definitions/StayInfo"},
+                "cancelledStays": { "type": "number" },
+                "totalStaysAmount": { "type": "number" }
+            }
+        },
+        "StayInfo": {
+            "type": "object",
+            "properties": {
+                "numOfstays": { "type": "number" },
+                "numOfNights": { "type": "number" },
+                "stayAmount": { "type": "number" }
+            }
+        },
+        "SearchPayload": {
+            "type": "object",
+            "properties": {
+                "startDate": {"type": "string", "format": "date" },
+                "endDate": {"type": "string", "format": "date" }
+            }
+        },
+        "InvalidResponse": {
+            "type": "object",
+            "properties": {
+                "title": { "type": "string" },
+                "statusCode": { "type": "string" },
+                "message": { "type": "string" }
+            }
+        }
+    }
+}
