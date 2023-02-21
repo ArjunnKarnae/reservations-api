@@ -17,7 +17,7 @@ const retrieveGuestsStaySummary = asyncHandler(async (req, res) => {
 
     const upcomingStaysInfo = getStaysInfo(futureStays);
     const pastStaysInfo = getStaysInfo(pastStays);
-    const cancelledStays = reservationsList.filter(reservation => reservation.staus === "cancelled").length;
+    const cancelledStays = reservationsList.filter(reservation => reservation.status === "cancelled").length;
     const totalStaysAmount = Math.abs(upcomingStaysInfo.stayAmount + pastStaysInfo.stayAmount);
     const guestStaySummary = {
         "guestMemberId": req.params.guestMemberId,
